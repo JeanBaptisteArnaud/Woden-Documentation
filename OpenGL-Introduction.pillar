@@ -4,31 +4,31 @@ The goal of this chapter is to explain the basics of OpenGL as an introduction t
 First of all we will focus to draw a big pictures abouts what is OpenGL.
 
 !What is OpenGL?
-OpenGL is a software library for accessing features in graphical hardware. OpenGL is designed as a client-server infrastructure your application is the client, openGL library is the server.
-It containt hardware independant function used to specify objects, images and operations required to  produce a three-dimensional graphic scene.
+OpenGL is a software library for accessing features in graphical hardware. OpenGL is designed as a client-server infrastructure where the client is your application and the server is the OpenGL library.
+It contains hardware independant function used to specify objects, images and operations required to  produce a three-dimensional graphic scene.
 
 Here is simplification of the operation required to render a image:
 - Using basic geometrics primitives the user specify the data for construct shape. Geometics primitive as points,lines, triangles and patches.
-- Execute a pipeline of ''shader'' to determines the positions, the colors or all possibles other rendering attributes. A ''Shader'' is a executable programs that take as input data produced by one stage of a pipeline  (such as vertices, primitives or fragments) and produce a differents type of datas ready for consumption by the subsequent stage in pipeline. The output of the pipeline is convert into a ''fragment''. A ''fragment'' correspond to a single pixel and it include color, deph and even texture coordonate.
-- execute the ''fragment shader'' is executed for determine the final color and position.
-- Eventually some additional per-fragment shader can be executed by exemple for determine if the fragment generated is visible or need to be blend with the current screen location.
+- Execute a pipeline of ''shader'' to determine the positions, the colors or all others possible rendering attributes. A ''Shader'' is a executable program that takes as input data produced by one stage of a pipeline  (such as vertices, primitives or fragments) and produces a different type of data ready for consumption by the subsequent stage in pipeline. The output of the pipeline is converted into a ''fragment''. A ''fragment'' correspond to a single pixel. It includes color, depth and even the texture's coordinates.
+- The ''fragment shader'' is executed to determine the final color and position.
+- Eventually some additional per-fragment shader can be executed to determine if the generated fragment is visible or needs to be blend with the current screen location.
 
 Here is the more detailled pipeline and an Extract of the OpenGL programming guide:
 +OpenGL Pipeline>file://Images/OpenGLPipeline.png|width=50+
 
 ;Vertex Shading
-:For each vertex that is issued by a drawing command, a vertex shader will be called to process the data associated with that vertex. Depending on whether any other pre-rasterization shaders are active, vertex shaders may  be very simple, perhaps just copying data to pass it through this shading stage(a ''pass-Through shader'') to a very complex shader that's position (ussually using transformation matrices), determining the vertex's color using lighting computations or any multitude of other techniques.
+:For each vertex that is issued by a drawing command, a vertex shader will be called to process the data assoaiated with that vertex. Depending on whether any other pre-rasterization shaders are active, vertex shaders may  be very simple, perhaps just copying data to pass it through this shading stage(a ''pass-Through shader'') to a very complex shader that's position (ussually using transformation matrices), determining the vertex's color using lighting computations or any multitude of other techniques.
 ;Tesselation Shading
-:After the vertex shader has been processed each vertex's associated data, the tesselation shader stage will continue processing those data if it s been activated as. Tessellation uses ''patchs'' to descibe an object's shape, and allows relatively simple collections of patch geometry to be tessellated to increase the number of geometric primitices providing bette- looking models. The tesselation shading stage can potentially use two shaders to manipulate the patch data and generate the final shape.
+:After the vertex shader has processed each vertex's associated data, the tesselation shader stage will continue to process those data (if activated). Tessellation uses ''patchs'' to descibe an object's shape, and allow relatively simple collections of patch geometry to be tessellated to increase the number of geometric primitives, providing better looking models. The tesselation shading stage can potentially use two shaders to manipulate the patch data and generate the final shape.
 ;Geometry Shading
-:The geometry shading  allows additional processing of individual geometric primitives, including creating new ones, before rasterization this shading stage is also optional.
+:The geometry shading  allows additional processing of individual geometric primitives, including creating new ones before rasterization. This shading stage is also optional.
 ;Primitive Setup
-:The previous  shading stages all operate on vertices, with the information about how those vertices are organized into geometric primitives being carried along internal to OpenGL. The primitive assembly stage organizes the vertices into their associated geometric primitives in preparation for clipping and rasterization.
+:The previous shading stages operate on vertices with the information about how those vertices are organized into geometric primitives being carried along internal to OpenGL. The primitive assembly stage organizes the vertices into their associated geometric primitives in preparation for clipping and rasterization.
 ;Clipping
-:Vertices can be outside the ''viewport'' (a rectangular conllection of pixels on the screen through which the rendered scene will be seen. Goes hand-in-hand with depth-range parameters) and cause the primitive associated with that vertex to be changed so none of its pixels are outside of the viewport. This operation is called clipping and is handled automaticallly by OpenGL.
+:Vertices can be outside the ''viewport'' (a rectangular collection of pixels on the screen through which the rendered scene will be seen. Goes hand-in-hand with depth-range parameters) and cause the primitive associated with that vertex to be changed so none of its pixels are outside of the viewport. This operation is called clipping and is handled automaticallly by OpenGL.
 ;Rasterization
-:Immediately after clipping, the updated primitives are sent to the rasterizer for fragment generation. Consider a fragment a "candidate pixel", in that pixels have a home in the framebuffer, while a fragment still can be rejected and never update its associated pixel locatio. Processing of a fragments occurs in the next two stages, fragment shading and per-fragment operations.
+:Immediately after clipping, the updated primitives are sent to the rasterizer for fragment generation. Consider a fragment a "candidate pixel", and it has a home in the framebuffer, while a fragment still can be rejected and never update its associated pixel location. Fragments' processing occurs in the next two stages: fragment shading and per-fragment operations.
 ;Fragment shading
-:The final stage where you have programmable control over the color of a screen location is during the fragment shading. Here, you use a shader to deternine the fragment's final color (can be changed one last time by the per-fragment operation), and potentially its depth value. Fragment shaders are very powerful as the often employ texture maping to augment the colors privided by the vertex processing stages. A fragment shader may also terminate tprocessing a fragment if it determines the fragment shouldn't be drawn;this process is called ''fragment discard''.
+:The final stage where you have programmable control over the color of a screen location is during the fragment shading. Here, you use a shader to determine the fragment's final color (can be changed one last time by the per-fragment operation), and potentially its depth value. Fragment shaders are very powerful as they often employ texture mapping to argument the colors provided by the vertex processing stages. A fragment shader may also terminate processing a fragment if it determines the fragment shouldn't be drawn. This process is called ''fragment discard''.
 
 
