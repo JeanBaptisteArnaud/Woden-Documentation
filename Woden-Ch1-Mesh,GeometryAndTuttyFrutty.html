@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>No title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap-theme.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/default.min.css">
+    <script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script>
+
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <div class="container">
+      <h1>I. Introduction to Shader Language</h1>
+<p>The goal of this chapter is to explain the basics of OpenGL graphics primitives, geometry and Basic structure.</p>
+
+<h1>II. Graphics Primitives</h1><p>By default OpenGL renders object in combinaison of point, lines (understanding <em>line segments</em>) or triangles.
+Points  are single vertex (a three-dimensional points in space). OpenGL provide some function to set the pixel value of a point, it is important to notice that each pixel of the point will be pass throught the fragment shader (so a point can have multiple color dependinhg how many pixel is allocated to it).
+<figure><img src="Images/GL_POINTS.png"></img><figcaption>GL_POINTS</figcaption></figure>
+A lines is a segments between two vertexs. OpenGL provide 3 way to declare lines as Presented in the folowing picture.</p><ol><li> In GL_LINES mode line are independant and you explicitly need two points to draw a line.</li><li> In GL_LINE_STRIP a line is formed by two points using the previous point as origin.</li><li> In GL_LINE_LOOP a line is formed by two points using the previous point as origin and the really first point is connected to the last one.</li></ol><p><figure><img src="Images/GL_LINES.png"></img><figcaption>GL_LINES</figcaption></figure></p>
+<p>The triangle primitive is far-away the most used. Everything can be redraw using triangle that why triangle is most optimized and recomended to used.</p>
+<ol><li> In GL_TRIANGLES mode triangle are independant and you explicitly need three points to draw a triangles.</li><li> In GL_TRIANGLE_STRIP a new triangle is formed by each additional vertex using the two previous one.</li><li> In GL_TRIANGLE_FAN a new triangle is formed by each additional vertex using the origin and the previous one.</li></ol><p><figure><img src="Images/GL_TRIANGLES.png"></img><figcaption>GL_TRIANGLES</figcaption></figure></p>
+<p>it exist some other mode like GL_QUAD, GL_QUAD_STRIP and GL_POLYGON but there are deprecated and non optimal. As we can represente all of them by simple triangle it is recomended to simply used triangle.
+ </p>
+    </div>
+
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+  </body>
+</html>

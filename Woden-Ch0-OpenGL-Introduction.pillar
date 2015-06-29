@@ -32,3 +32,5 @@ Here is the more detailled pipeline and an Extract of the OpenGL programming gui
 :The final stage where you have programmable control over the color of a screen location is during the fragment shading. Here, you use a shader to determine the fragment's final color (can be changed one last time by the per-fragment operation), and potentially its depth value. Fragment shaders are very powerful as they often employ texture mapping to argument the colors provided by the vertex processing stages. A fragment shader may also terminate processing a fragment if it determines the fragment shouldn't be drawn. This process is called ''fragment discard''.
 
 
+!Woden - Basic
+Lets begin our trip into Woden. Woden is a Modern OpenGL library for Pharo, the goal of Woden is to provide complete, modern and efficient api for OpenGL.
