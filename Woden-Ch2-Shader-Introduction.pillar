@@ -1,17 +1,17 @@
 !Introduction to Shader Language
 
-The goal of this chapter is to explain the basics of Shader and Shader language as an introduction.
-In this chapter I will explain only the basics elements required to write by yourself a simple shader.
-And then explain how use do it with Woden.
+The goal of this chapter is to explain the basics of shading and Shader language as an introduction.
+In this chapter I will only explain the basic required elements to write by yourself a simple shader.
+And then explain how to add it with Woden.
 !What is a Shader?
-A ''Shader'' is a executable programs that take as input data produced by one stage of a pipeline  (such as vertices, primitives or fragments) and produce a differents type of datas ready for consumption by the subsequent stage in pipeline. The output of the pipeline is convert into a ''fragment''. A ''fragment'' correspond to a single pixel and it include color, deph and even texture coordonate.
+A ''Shader'' is a executable program that takes as input data produced by one stage of a pipeline (such as vertices, primitives or fragments) and produces a different type of datas ready for consumption by the subsequent stage in pipeline. The output of the pipeline is convert into a ''fragment''. A ''fragment'' corresponds to a single pixel and it includes color, depth and even texture coordinates.
 
 Here is the detailled kind shading stage:
-# The ""Vertex Shading Stage"" is the first stage, it take the data from your vertex-buffer objects, processing each vertex separately. This stage is mandatory.
-# The ""Tesselation Shading Stage"" is an optional stage that generate additional geometry. This stage receive data trom the vertex Shading stage.
-# The ""Geometry Shading Stage"" is a an optional stage that allow complete modification of the geometry. You can by example discard geometry, generate new one. change the type from triangle to line.
+# The ""Vertex Shading Stage"" is the first stage, it takes the data from your vertex-buffer objects, processing each vertex separately. This stage is mandatory.
+# The ""Tesselation Shading Stage"" is an optional stage that generates additional geometry. This stage receives data trom the vertex Shading stage.
+# The ""Geometry Shading Stage"" is a an optional stage that allows complete modification of the geometry. For example you can discare geometry and generate a new one. Change the type from triangle to line.
 # The ""Fragment Shading Stage"" is the final stage of the shader pipeline. The stage process the individual fragment (or sample is a specific mode). In this stage the color and depth are computed.
-# The ""Compute Shading Stage"" is not part of the graphical pipeline. A compute shader process generic work item drive by the application range. To make it simple the Compute Shading Stage can performed Heavy calculation to do whatever you want and can send data to other shader. It is this stage that is used by GPU calculation.
+# The ""Compute Shading Stage"" is not part of the graphical pipeline. A compute shader process generic work item drive by the application range. To make it simple the Compute Shading Stage can performe Heavy calculation to do whatever you want and can send data to another shader. This stage is used for GPU calculation.
 
 !Create a Shader?
 To be simple the shader language syntax is really close to "C". The basic input of the program is the main() function. Here is a really simple shader:
@@ -33,15 +33,15 @@ main()
 }
 ]]]
 
-This shader will simply take the color pass as input and set it at ouput. It also compute the position with ModelViewProjectionMatrix to calculate the real position of the vertex in the view (for more information about that Read the Camera chapter).
+This shader simply takes the color pass as input and set it at ouput. It also computes the position with ModelViewProjectionMatrix to calculate the real position of the vertex in the view (for more informations, read the Camera chapter).
 
-The minimal elements that composed a shader is:
+The minimal elements that composes a shader is:
 !!Shader Language: Version
-OpenGL Shader Language evolve a lot since it creation in April 2004 (version 110). In that context a lot of things change from the very first version (version 110) and the last one (version 450). Some element become deprecated and unusable.
-So it is mandatory to tell to OpenGL which version it should used. Some shader can specify also the keyword ''core'', this mean that the execution of the shader is also restricted to the ""core"" profile (in opposition of ""compatible"" profile).
-This profile mechanism as been integrated due to a difference that can be present on some OS (MacOS) that restrict the version of OpenGL to a subset of application.
+OpenGL Shader Language evolved a lot since it's creation in April 2004 (version 110). In that context a lot of things changed from the very first version (version 110) and the last one (version 450). Some elements became deprecated and unusable.
+So it is mandatory to tell to OpenGL which version it should used. Some shader can specify also the keyword ''core'', this means that the execution of the shader is also restricted to the ""core"" profile (in opposition of ""compatible"" profile).
+This profile mechanism as been integrated due to a difference that can be present on some OS (specifically MacOS) that restricts the version of OpenGL to a subset of application.
 In Woden, there is no way now to change the profile type easily (WOP) .
-To make it simple, on Linux and Window you can used full hardware performance. On MacOS you are restricted to version 120 for the shader language, until the infrastructure to switch between version will be implemented.
+To make it simple, on Linux and Window you can use full hardware performance. On MacOS you are restricted to version 120 for the shader language until the infrastructure to switch between version will be implemented.
 
 !!Shader Language: Type
 Here is all the type usable in a shader language
@@ -64,17 +64,17 @@ Shader language authorized implicit type casting for some type:
 - ""uint"" from ""int"".
 - ""float"" from ""int"",""uint"".
 - ""double"" from ""int"",""uint"",""float"".
-For explicit type casting most of the method exist and are named as the expected type:
+For explicit type casting most of the methods exists and are named as the expected type:
 By example:
-if I want to cast a variable v2 composed by 1.0 and 2.0 into a vec3.
+If I want to cast a variable vector2 composed by 1.0 and 2.0 into a vec3.
 I will need an additional float.
 So I can call the vec3 constructor:
 [[[language=Shader
- vec3(v2,5.0);
+ vec3(vector2,5.0);
 ]]]	
 Will return a vec3(1.0,2.0,5.0)
 
-Most the convertion method exist and are intuitive.
+Most of the convertion methods exists and are intuitive.
 
 !!! Type Modifier
 |! Type Modifier |! Description |
@@ -85,11 +85,10 @@ Most the convertion method exist and are intuitive.
 | uniform 	| Specifies that the variables is passed to the current shader from  the application it is constant in the current scope | 
 | buffer 	| Specifies that the variables is a read-write memory shared by the application and the current shader(call ''shader storage buffer''). | 
 | shared (Compute Shader only)	| Specifies that the variables are shared within a local work group. | 
-Some of them are deprecated but still used if you used a older version of OpenGL (version 120).
+Some of them are deprecated but still used if you are using an older version of OpenGL (version 120).
 | varying 	| Declare the variables as a input of the current Shader stage that can be changed and will pass as output. Varying as be replace by in / out / inout | 
 
 
 
 ! Shader in Woden
-Now we a small overview of what is a Shader and its syntaxt. 
-Now we will see how we create manipulate set a shader with Woden.
+Now that we had a small overview of what is a Shader and its syntax, we will see how to create, manipulate, and set a shader with Woden.
