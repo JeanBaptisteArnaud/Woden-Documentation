@@ -3,23 +3,23 @@
 The goal of this chapter is to explain the basics of OpenGL graphics primitives, geometry and Basic structure.
 
 !Graphics Primitives
-By default OpenGL renders object in combinaison of point, lines (understanding ''line segments'') or triangles.
-Points  are single vertex (a three-dimensional points in space). OpenGL provide some function to set the pixel value of a point, it is important to notice that each pixel of the point will be pass throught the fragment shader (so a point can have multiple color dependinhg how many pixel is allocated to it).
+By default OpenGL renders object in combinaison of points, lines (understanding ''line segments'') or triangles.
+Points are single vertex (a three-dimensional points in space). OpenGL provides some functions to set the pixel value of a point, it is important to notice that each pixel of the point will be pass throught the fragment shader (so a point can have multiple color dependinhg how many pixel is allocated to it).
 +GL_POINTS>file://Images/GL_POINTS.png+
-A lines is a segments between two vertexs. OpenGL provide 3 way to declare lines as Presented in the folowing picture.
+A lines is a segments between two vertexs. OpenGL provide 3 way to declare lines as presented in the folowing picture.
 # In GL_LINES mode line are independant and you explicitly need two points to draw a line.
 # In GL_LINE_STRIP a line is formed by two points using the previous point as origin.
 # In GL_LINE_LOOP a line is formed by two points using the previous point as origin and the really first point is connected to the last one.
 +GL_LINES>file://Images/GL_LINES.png+
 
-The triangle primitive is far-away the most used. Everything can be redraw using triangle that why triangle is most optimized and recomended to used.
+The triangle primitive is far-away the most used. Everything can be redraw using triangles. That why they are the most optimized and recomended to use.
 
-# In GL_TRIANGLES mode triangle are independant and you explicitly need three points to draw a triangles.
+# In GL_TRIANGLES mode, triangles are independants and you explicitly need three points to draw a triangle.
 # In GL_TRIANGLE_STRIP a new triangle is formed by each additional vertex using the two previous one.
 # In GL_TRIANGLE_FAN a new triangle is formed by each additional vertex using the origin and the previous one.
 +GL_TRIANGLES>file://Images/GL_TRIANGLES.png+
 
-it exist some other mode like GL_QUAD, GL_QUAD_STRIP and GL_POLYGON but there are deprecated and non optimal. As we can represente all of them by simple triangle it is wise to simply used triangle.
+There is some other modes like GL_QUAD, GL_QUAD_STRIP and GL_POLYGON but there are deprecated and non optimal. As we can represent all of them by simple triangles it is wiser to simply use them.
 
 
 
