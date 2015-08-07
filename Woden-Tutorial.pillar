@@ -1,0 +1,199 @@
+!Getting Started with Woden
+First of all, you need to load woden into a Pharo image. Loading Woden into a
+clean Pharo can be done in the following steps
+
+!!Step One: Get a clean Pharo image and a VM if necessary.
+For this step you can go to the Pharo website and download a Pharo 4 image. If you
+are lazy or prefer the command line, you can use one of the following commands
+in Linux or Mac OS X:
+
+[[[
+curl get.pharo.org/40+vm | bash
+# or if curl is not available:
+wget -O- get.pharo.org/40+vm | bash
+]]]
+
+The script will download automatically a Pharo 4 image and an adequate VM for
+your operating system. If you only need a clean Pharo 4 image, but not the VM,
+you can use the following script:
+
+[[[
+curl get.pharo.org/40 | bash
+# or if curl is not available:
+wget -O- get.pharo.org/40 | bash
+]]]
+
+For running the downloaded Pharo image, you can use the following command:
+
+[[[
+./pharo-ui Pharo.image
+]]]
+
+!!Step two: Load Woden into the Pharo image.
+
+This step consist in loading Woden into the Pharo.image. For this step, you need
+to open a playground in Pharo. For opening a playground, you need to perform a left
+click with the mouse in the main Pharo window, known as the ''World'', and then
+select ''Playground'' from the menu. This should open a Playground window.
+A playground window is a place in Pharo where scripts can be tested.
+
+For loading Woden in Pharo, you have to copy the following script in the playground:
+[[[
+Gofer new smalltalkhubUser: 'PharoExtras' project: 'NBOpenGL'; package: 'ConfigurationOfNBOpenGL'; load. ((Smalltalk at: #ConfigurationOfNBOpenGL) project version: '3.0') load.
+
+Gofer new smalltalkhubUser: 'Pharo' project: 'OSWindow'; package: 'ConfigurationOfOSWindow'; load. (Smalltalk at: #ConfigurationOfOSWindow) loadBleedingEdge.
+
+Gofer new smalltalkhubUser: 'ronsaldo' project: 'Woden'; package: 'ConfigurationOfWoden'; load. (Smalltalk at: #ConfigurationOfWoden) loadBleedingEdge.
+]]]
+
+You then need to select all of it, perform a right click, and then select in the
+menu ''Do It''. This should start downloading and loading all of the dependencies
+required by Woden. Then it will download and load Woden itself. This process
+can take a while. During the loading process Pharo will be frozen. If you click
+in the world, the menu won't be appearing until the loading process is finished.
+
+!!Step three: Testing that everything was loaded
+After Woden has been loaded into Pharo, you should run the following script in
+a Playground for testing that everything is fine:
+
+[[[
+WDFPSSimpleExample5 new open
+]]]
+
+You should see window with a simple scene, that contains a floor with ceramic
+tiles and a light above it that it is moving. You can move around the scene
+by using the keys W,A,S,D. You can also rotate your view by using the keys 8,4,5,6.
+I recommend to use those last keys in a numeric pad.
+
+!Making a simple scene
+In this chapter we are going to go through the process of making a simple scene
+in the playground. So, lets begin a opening an empty playground a copying the
+following script:
+
+[[[
+scene := WDScene new.
+
+camera := WDCamera new.
+scene addChild: camera.
+
+(WDSceneViewer scene: scene camera: camera) open
+]]]
+
+This scripts does three things: it creates an empty scene; it creates a camera,
+and adds it into the scene; it create an scene viewer for viewing the scene. By
+doing that script, you should be getting a window with a black background and
+nothing on it. Lets make another scene with a lighter background, something like
+yellow:
+
+[[[
+scene := WDScene new.
+scene backgroundColor: WDColor yellow.
+
+camera := WDCamera new.
+scene addChild: camera.
+
+(WDSceneViewer scene: scene camera: camera) openInMorphic
+]]]
+
+So, we now changed the background. But where is the 3D that Woden is so famous
+about? Ok, lets go by parts. There are actually two interfaces for drawing stuffs
+in Woden: a low level interface, which is wrapper around 3D graphics API such as
+OpenGL, and a high level interface. The high-level interface is built around the
+concept of a classic a scene graph. A classic scene graph is a tree like data
+structure in which we have some nodes that can contain some children. Each
+node contains at least contains a geometric transformation such as a translation
+and a rotation. In addition, each node can contain some resources such as a 3D
+shape, a sound source, a physics rigid body, an animation or something strange defined
+by the user ;) . The scene itself is also another scene node in addition to being
+the root of the scene graph. The camera is also a scene node and it needs parent.
+That is because it is added as a child to the scene.
+
+So, for adding a cube to the scene, we need at least two things: the shape of the
+cube, and a scene node that contains it. Creating the cube scene node is easy, 
+you only need to add the following after creating the scene to script:
+
+[[[
+cube := WDSceneNode new.
+scene addChild: cube.
+]]]
+
+But adding the shape to the cube is harder. In 3D graphics, you need
+to make a triangular mesh to describe the surfacce of any 3D shape object. A
+triangular mesh is composed of two things: vertices and triangles. So for making
+a cube shape we need the vertices of the cube, its triangles and then add them
+into a mesh renderable object. This can be a bit hard, but for cube and some
+simple shapes there is a convenience class called ''WDGeometryBuilder''. This 
+class already provides a method for making cubes. So for this, lets just use it:
+
+[[[
+cubeShape := WDGeometryBuilder new
+		addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+		makeRenderable.
+cube attach: cubeShape.
+]]]
+
+This creates a geometry builder, then it creates a cube, and then it creates
+renderable object. But if we only create the cube shape and don't tell
+Woden where to use it, then there is no way that Woden can guess where it should
+put the cube. So we have to attach to the shape into the cube scene node.
+
+Ok, so we have an scene, a camera and cube, but if we open it, we still can not
+see the cube. Why is this happening? The problem is, that the camera is inside
+the cube. Lets try by moving the farther away from the camera by adding the
+following to the script:
+
+[[[
+cube position: (WDVector3 x: 0.0 y: 0.0 z: -3.0).
+]]]
+
+So now, we can see the cube. Because this is using the scene viewer,
+it is possible to move around by using the W,A,S,D keys and to rotate around
+by using the 8,4,5,6 numbers. The only strange thing, is that this cube looks
+a bit very flat. This is because there is not lighting present in the scene. So,
+lets add a point light into it.
+
+[[[
+pointLight := WDPointLight new.
+scene addChild: pointLight.
+]]]
+
+Let there be light. So we said, and there was light. But only shining directly
+in the front face of the cube.
+
+This light is a bit boring. So lets make it rotate around the cube, and above. Some
+behaviors can be attached into scene nodes. Some of them are just simple
+animations. Others are more complicated, the involve full rigid body physics
+simulations when there is a physics engine available. For this example,
+lets use the elliptical orbit behavior with its default radius:
+
+[[[
+pointLight attach: (WDEllipticalOrbit new center: (WDVector3 newX: 0.0 y: 1.5 z: -3.0)).
+]]]
+
+Finally we have a simple scene. To recapitulate, here is the full code of this
+example that can be ran in a playground:
+
+[[[
+scene := WDScene new.
+scene backgroundColor: WDColor yellow.
+
+cube := WDSceneNode new.
+scene addChild: cube.
+
+cubeShape := WDGeometryBuilder new
+		addCubeWithWidth: 1.0 height: 1.0 depth: 1.0;
+		computeNormals;
+		makeRenderable.
+cube attach: cubeShape.
+cube position: (WDVector3 x: 0.0 y: 0.0 z: -3.0).
+
+pointLight := WDPointLight new.
+scene addChild: pointLight.
+pointLight attach: (WDEllipticalOrbit new center: (WDVector3 newX: 0.0 y: 1.5 z: -3.0)).
+
+camera := WDCamera new.
+scene addChild: camera.
+
+(WDSceneViewer scene: scene camera: camera) openInMorphic
+]]]
+
