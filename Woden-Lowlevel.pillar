@@ -1,0 +1,88 @@
+!Using the Woden Low-Level graphics interface
+
+!!Introduction
+The Woden multimedia engine provides two graphics interfaces, a high-level
+interface that deals with a scene graph and a low-level interface that wraps
+around lower level graphics API, such as OpenGL and Direct3D. Currently
+there is only an implementation of this low-level interface using OpenGL
+2.0 and above. In the future there are plans to support Vulkan and Direct3D 12
+as lower level backends. Despite the differences between the backends, an user
+should not care about what Woden is actually running, unless he is writing a shader
+or the actual low-level interface.
+
+In this chapter, we will see how to use the low-level interface presented by Woden
+to the user. But before making an example, we will see first a high-level overview
+of how modern graphics hardware is programmed.
+
+!!Modern graphics programming
+The problem of drawing 3D graphics consists in taking a shape that is represented
+in a three dimensional space, and drawing it in a two dimensional surface. However,
+any 3D object can be quite complicated,so we need to simplify them into
+some kind of standard representation. Lets assume that the surface of a 3D object
+is completely opaque, then we only need to draw the surface of the object and not
+its interior volume. All of the surfaces of any object can be approximated by using
+triangles, unless the object is very thing. If the object is very thin or small,
+it could be more appropiate to use line segments or points. Because of this, we only need
+to be able draw three different shapes: points, line segments and triangles.
+
+So we have our cool 3D object, then we approximate it by using points, lines or
+triangles. But how do we represent them? In geometry, we need to represent their
+spatial positions, and their topology. For representing spatial positions, we can
+use vertices, which is a set of three cartesian coordinates, ''x'', ''y'' and ''z''.
+A point can be defined by using a single vertex; a line can be defined using two
+vertices; a triangle can be defined using three vertices.
+
+This means, that our first problem is to send the vertices and their relationship
+to the graphics hardware. Vertices are sent to the graphics hardware by placing
+them in a special buffer known as a ''vertex buffer''. The topological relationship
+between vertices can be specified in two ways, implicitly and explicitly.
+
+The topological relationship between points is trivial. Each vertex belongs to 
+different point, so it is not worth it to specify explicitly. A single vertex buffer
+where each vertex represents a different point.
+
+For a line segment, it gets a bit more interesting. A line segment can be
+specified by using its two endpoints, so we need two vertices. The topology
+can be specified implicitly by putting sequentially the pairs of vertices in the
+vertex buffer. For example, the first vertex present in the vertex buffer
+is the first endpoint of the first line segment. The second vertex is the second
+endpoint of the first line segment. The third vertex is the first endpoint of
+the second line segment. The fourth vertex is the second endpoint of second line
+segment. An so on.
+
+The topology can also be specified explicitly by using a second buffer that is
+known as an ''index buffer''. And index buffer hold indices to the vertices
+present in a vertex buffer. In this case, the vertex buffer can hold vertices in a
+random order. The vertices of the line segments endpoints are specified by pairs
+of indices present in the index buffer. To keep with the previous example. The
+first index specifies the index of the vertex that is used as the first endpoint
+of the first line segment. The second index specifies the index of the vertex that
+is used as the second endpoint of the first line segment. The third index specifies
+the index of the vertex that is used as the first endpoint of the second line segment.
+The fourth index specifies the index of the vertex that is used as the second
+endpoint of the second line segment.
+
+Triangles are specified in a similar way to the one used for line segments. But
+instead of having two vertices, a triangle has three vertices or three indices.
+The vertices of a triangle can be specified in clockwise or counter clock order.
+This order is known as the winding order. The winding order is used for back
+face culling. In Woden front faces by default are specified in count clockwise order
+and back faces are in clockwise order. If face culling is enabled, only front faces
+will be rendered. This is used as a performance improvement and it also
+explains why the faces of a cube are invisible when the camera is inside of the cube.
+
+!!Using the Low-Level interface
+For this example, we will go through the process of rendering a simple scene with
+one part in 2D and another in 3D.
+
+The 2D part will some kind of HUD style interface commonly present in video games.
+For this example it will contain just a just a single bar that represents some
+stats such as the player life.
+
+The 3D part will be a plane representing the floor, and a cube representing some
+kind of entity.
+
+We will keep it simple to avoid having to input complex geometry data, and to
+avoid having to use WDGeometryBuilder. The idea of this example is to see what
+is under the hood of the scene graph representation.
+
